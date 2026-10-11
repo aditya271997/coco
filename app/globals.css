@@ -1,26 +1,133 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ------------------------------------------------------------------------ */
+/* Design tokens: crimson script, gold accents, blush & cream background    */
+/* ------------------------------------------------------------------------ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Fonts are loaded with next/font in app/layout.tsx. */
+  --font-sans: var(--font-montserrat), system-ui, sans-serif; /* labels & buttons */
+  --font-serif: var(--font-cormorant), Georgia, serif; /* body & questions */
+  --font-script: var(--font-great-vibes), cursive; /* names & headings */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  /* Crimson: script headings and the main button */
+  --color-crimson-400: #e0457b;
+  --color-crimson-500: #c2185b;
+  --color-crimson-600: #a3134c;
+
+  /* Blush pinks: background and soft fills */
+  --color-blush-50: #fff5f8;
+  --color-blush-100: #fde6ee;
+  --color-blush-200: #fbcfdc;
+  --color-blush-300: #f9a8c0;
+  --color-blush-400: #f48aa6;
+
+  /* Gold: ornaments, outlines and small labels */
+  --color-gold-100: #fff4d6;
+  --color-gold-200: #fbe3a6;
+  --color-gold-300: #f6c95c;
+  --color-gold-400: #f2b632;
+  --color-gold-500: #f0a30a;
+  --color-gold-700: #a3570b; /* dark enough for small text */
+
+  /* Neutrals */
+  --color-cream: #fffaf3;
+  --color-ink: #3d3a45;
+  --color-muted: #6e6779;
+
+  /* Deep maroon: the letter */
+  --color-maroon-700: #3d1422;
+  --color-maroon-800: #2d0f18;
+  --color-maroon-900: #1f0a10;
+
+  --shadow-soft: 0 14px 40px -16px rgb(194 24 91 / 0.28);
+  --shadow-card: 0 10px 30px -12px rgb(163 87 11 / 0.22);
+
+  --animate-blink: blink 1s step-end infinite;
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
   }
 }
 
+/* ------------------------------------------------------------------------ */
+/* Base                                                                     */
+/* ------------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-blush-100);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pink edges fading into a warm cream glow in the middle. Fixed so it doesn't jump on mobile scroll. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 85% 75% at 50% 45%,
+    var(--color-cream) 0%,
+    var(--color-blush-100) 50%,
+    #f7b0c2 100%
+  );
+}
+
+/* ------------------------------------------------------------------------ */
+/* Reusable text styles & buttons                                           */
+/* ------------------------------------------------------------------------ */
+
+/* Small, widely spaced gold label ("COUNTING DOWN" style). */
+@utility eyebrow {
+  @apply font-sans text-xs font-medium tracking-[0.35em] text-gold-700 uppercase;
+}
+
+/* Filled crimson pill. */
+@utility btn-primary {
+  @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-linear-to-r from-crimson-500 to-crimson-600 px-9 py-3 font-sans text-sm font-semibold tracking-[0.2em] text-white uppercase shadow-soft transition-[filter] select-none hover:brightness-110 focus-visible:ring-4 focus-visible:ring-blush-300 focus-visible:outline-none;
+}
+
+/* Gold outlined pill ("VIEW DETAILS" style). */
+@utility btn-outline {
+  @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-gold-400 bg-white/40 px-9 py-3 font-sans text-sm font-medium tracking-[0.25em] text-gold-700 uppercase backdrop-blur-sm transition-colors select-none hover:bg-gold-100/70 focus-visible:ring-4 focus-visible:ring-gold-200 focus-visible:outline-none;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Floating flowers & hearts background                                     */
+/* ------------------------------------------------------------------------ */
+
+@keyframes float-up {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-8deg);
+    opacity: 0;
+  }
+  10%,
+  85% {
+    opacity: var(--float-opacity, 0.7);
+  }
+  100% {
+    transform: translate3d(var(--drift, 0px), -115vh, 0) rotate(12deg);
+    opacity: 0;
+  }
+}
+
+.floating-item {
+  position: absolute;
+  bottom: -3rem;
+  animation: float-up linear infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-item {
+    display: none;
+  }
 }
